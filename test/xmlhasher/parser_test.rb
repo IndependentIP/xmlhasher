@@ -180,7 +180,7 @@ class XmlhasherTest < Test::Unit::TestCase
 
   def test_attributes
     xml = %[<tag a1='1' a2='2'></tag>]
-    expected = {:tag => {:a1 => '1', :a2 => '2'}}
+    expected = {:tag => nil }
     assert_equal expected, XmlHasher::Parser.new.parse(xml)
   end
 
@@ -208,15 +208,6 @@ class XmlhasherTest < Test::Unit::TestCase
     assert_equal expected, XmlHasher::Parser.new.parse(xml)
   end
 
-  def test_snakecasing_attributes
-    options = {
-        :snakecase => true,
-    }
-    xml = %[<tag attr-1='1'></tag>]
-    expected = {:tag => {:attr_1 => '1'}}
-    assert_equal expected, XmlHasher::Parser.new(options).parse(xml)
-  end
-
   def test_snakecasing_elements
     options = {
         :snakecase => true,
@@ -241,4 +232,33 @@ class XmlhasherTest < Test::Unit::TestCase
     expected = {:tag => nil}
     assert_equal expected, XmlHasher::Parser.new.parse(xml)
   end
+
+  def test_ignored_tag
+    expected = {
+      :ignore => {
+        :objects => {
+          :object =>
+            [ {:name=>"Test", :other=>"Value"}, {:name=>"Test", :other=>"Value", :nested => { :"nested-content" => "read" }} ]
+          }
+      }
+    }
+
+    options = { except: [:ignored] }
+    assert_equal expected, XmlHasher::Parser.new(options).parse(fixture('nested_ignore.xml'))
+  end
+
+  def test_accept_tag
+    expected = {
+      :ignore => {
+        :objects => {
+          :object =>
+            [ {:name=>"Test"}, {:name=>"Test"} ]
+          }
+      }
+    }
+
+    options = { only: [:ignore, :objects, :object, :name] }
+    assert_equal expected, XmlHasher::Parser.new(options).parse(fixture('nested_ignore.xml'))
+  end
+
 end

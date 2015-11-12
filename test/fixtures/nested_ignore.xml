@@ -1,0 +1,26 @@
+<ignore>
+  <objects>
+    <object>
+      <name>Test</name>
+      <ignored>
+        <nested>
+          <ignored>
+            <sub-content>ignored</sub-content>
+          </ignored>
+        </nested>
+        <content>ignored</content>
+      </ignored>
+      <other>Value</other>
+    </object>
+    <object>
+      <name>Test</name>
+      <nested>
+        <ignored>
+          <sub-content>ignored</sub-content>
+        </ignored>
+        <nested-content>read</nested-content>
+      </nested>
+      <other>Value</other>
+    </object>
+  </objects>
+</ignore>
